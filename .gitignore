@@ -1,0 +1,17 @@
+# Rust
+contract/target/
+contract/Cargo.lock
+
+# Node
+backend/node_modules/
+frontend/node_modules/
+*.log
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
