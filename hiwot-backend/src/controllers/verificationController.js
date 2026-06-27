@@ -10,7 +10,7 @@ export const verifyTransaction = async (req, res) => {
       return res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Transaction not found' } });
     }
 
-    // In production, you would also verify on Stellar explorer.
+
     res.json({
       success: true,
       transaction: {

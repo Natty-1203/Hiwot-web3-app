@@ -95,13 +95,9 @@ export const getBeneficiaryWithEligibility = async (req, res) => {
       return errorResponse(res, 'RESOURCE_NOT_FOUND', 'Beneficiary not found', 404);
     }
 
-    // Compute eligibility – we need to know which programs this beneficiary can claim.
-    // For simplicity, we'll check if there's any active cash program with remaining funds.
-    // For a real implementation, you'd compute based on program rules and previous claims.
+    // Simple eligibility: any active program with remaining funds
     let eligible = true;
     let totalAvailable = 0;
-    // Placeholder: we'll assume eligible if any program has remaining funds
-    // We'll later integrate with program logic.
 
     let history = {};
     if (include_history === 'true') {

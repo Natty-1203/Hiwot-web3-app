@@ -46,9 +46,8 @@ export const getAgent = async (req, res) => {
     const agent = await Agent.findOne({ agentId: agent_id }).lean();
     if (!agent) return errorResponse(res, 'RESOURCE_NOT_FOUND', 'Agent not found', 404);
 
-    // For recent distributions, we need to fetch claims from Claim collection where this agent was involved.
-    // Since we don't have agent association in claims yet, we'll leave empty for now.
-    const recentDistributions = []; // could be populated from claim records if we store agentId
+    // TODO: agent-claim association not yet implemented
+    const recentDistributions = [];
 
     const enriched = {
       agent_id: agent.agentId,

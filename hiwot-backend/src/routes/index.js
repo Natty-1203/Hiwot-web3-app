@@ -2,8 +2,7 @@ import express from 'express';
 import { authenticateApiKey, authorize } from '../middleware/apiAuth.js';
 import { register, login } from '../controllers/authController.js';
 
-// Beneficiary (basic, still used? – we keep them but now protected for agents)
-// We'll protect them with agent role, but also keep them if they are needed by managers? We'll protect with agent only.
+// Beneficiary endpoints (agent-protected)
 import { registerBeneficiary, getBeneficiary } from '../controllers/beneficiaryController.js';
 
 // Cash program controllers
@@ -42,7 +41,7 @@ import {
   getTracking
 } from '../controllers/supplyChain.js';
 
-// Mock bank (admin only – we'll protect with manager role)
+// Mock bank (manager-only)
 import { getMockBankTransactions, getTransaction } from '../controllers/mockBankController.js';
 
 // Donor specific
@@ -199,11 +198,6 @@ router.post('/v1/geofence/verify', authenticateApiKey, authorize('agent'), verif
 router.get('/v1/agents/:wallet', authenticateApiKey, authorize('agent'), getAgentProfile);
 router.patch('/v1/agents/:wallet', authenticateApiKey, authorize('agent'), updateAgentProfile);
 
-// ------------------ Additional endpoints used by both donor and manager (but we protect by role) ------------------
-// For cash programs list and creation, we assume only managers can list all programs? Actually donors might need a list too.
-// We already have a manager list; we can create a separate donor list endpoint if needed.
-// For now, we leave the list endpoints unprotected? The spec shows donor portal has program details, but maybe also list.
-// If you need a public list, you can add a separate GET /v1/programs without auth.
-// We'll leave them as is for now – adjust based on your needs.
+// Some endpoints are reused across roles (manager/donor) with role-based access
 
 export default router;

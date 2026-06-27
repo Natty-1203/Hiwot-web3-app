@@ -5,10 +5,8 @@ import Beneficiary from '../../models/Beneficiary.js';
 import Agent from '../../models/Agent.js';
 import { successResponse, errorResponse } from '../../utils/response.js';
 
-// Helper: get manager's organization wallet (from auth header; for demo, use fixed or extract)
 function getManagerWallet(req) {
-  // In production, decode JWT or header. For hackathon, we can assume it's passed in header or use a test wallet.
-  return req.headers['x-org-wallet'] || 'GCBXXX23'; // default test wallet
+  return req.headers['x-org-wallet'] || 'GCBXXX23';
 }
 
 // Get all programs (cash + goods) for this manager
@@ -230,8 +228,7 @@ export const createManagerProgram = async (req, res) => {
         }
       }, 201);
     } else if (program_type === 'goods') {
-      // For goods, we need inventory items. For simplicity, we'll create a goods program with no inventory? Actually spec expects inventory.
-      // We'll create a placeholder inventory (empty) and let the manager add items later.
+      // Goods program starts with empty inventory; manager adds items via inventory endpoints
       const program = new GoodsProgram({
         organizationWallet: managerWallet,
         title: name,

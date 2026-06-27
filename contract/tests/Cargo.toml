@@ -1,0 +1,22 @@
+[package]
+name = "integration-tests"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+name = "integration_tests"
+path = "integration.rs"
+doctest = false
+
+[dependencies]
+soroban-sdk = { workspace = true }
+
+[dev-dependencies]
+soroban-sdk = { workspace = true, features = ["testutils"] }
+
+# Local contract dependencies
+hiwot-identity = { path = "../contracts/identity" }
+hiwot-token = { path = "../contracts/token" }
+hiwot-supply-chain = { path = "../contracts/supply_chain" }
+hiwot-disbursement = { path = "../contracts/disbursement" }

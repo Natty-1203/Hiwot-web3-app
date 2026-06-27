@@ -80,9 +80,7 @@ export const bulkSyncDistributions = async (req, res) => {
 
     for (const dist of distributions) {
       try {
-        // Simulate processing each distribution
-        // For each, we could call the same logic as distributeAid
-        // For brevity, we'll just create Distribution records with status confirmed
+        // Create confirmed distribution records
         const newDist = new Distribution({
           ...dist,
           status: 'confirmed',

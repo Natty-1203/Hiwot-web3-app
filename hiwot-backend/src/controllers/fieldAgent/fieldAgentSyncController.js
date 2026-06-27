@@ -5,9 +5,7 @@ export const syncData = async (req, res) => {
   try {
     const { data } = req.body; // could be offline distributions
     if (data && Array.isArray(data)) {
-      // Process offline data (similar to bulk sync)
-      // For simplicity, we'll just count pending
-      // In a real implementation, you'd insert and then mark as synced.
+      // Placeholder: process offline data
     }
 
     // Check if there are any pending sync items

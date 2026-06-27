@@ -6,7 +6,7 @@ const checkpointSchema = new mongoose.Schema({
   timestamp: { type: Date, default: Date.now },
   notes: String,
   recordedBy: String,
-  txHash: String, // optional: if we record each checkpoint on-chain
+  txHash: String, // optional on-chain checkpoint hash
 });
 
 const shipmentSchema = new mongoose.Schema({

@@ -17,9 +17,7 @@ export const getGeofence = async (req, res) => {
       const sumLat = coordinates.reduce((s, c) => s + c[0], 0);
       const sumLng = coordinates.reduce((s, c) => s + c[1], 0);
       center = [sumLat / coordinates.length, sumLng / coordinates.length];
-      // Rough area calculation (simplified)
-      // For hackathon, we'll just approximate using Shoelace formula (converted to km²)
-      // We'll leave area as null for simplicity.
+      // Area calculation omitted
     }
 
     successResponse(res, {

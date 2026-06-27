@@ -36,7 +36,7 @@ export const createCashProgram = async (req, res) => {
     // Store program in local DB with the programIdString as internalId (or store mapping)
     const program = new CashProgram({
       internalId: programIdString,
-      programId: programIdString, // we can store the string as on-chain ID
+      programId: programIdString,
       organizationWallet: organization_wallet,
       title,
       amountPerPerson: amount_per_person,

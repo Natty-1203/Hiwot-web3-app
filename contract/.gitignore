@@ -1,0 +1,26 @@
+# Rust's output directory
+target
+
+# Local settings
+.soroban
+.stellar
+
+# Rust
+Cargo.lock
+
+# Soroban
+*.wasm
+artifacts/
+
+# Environment
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+EOF

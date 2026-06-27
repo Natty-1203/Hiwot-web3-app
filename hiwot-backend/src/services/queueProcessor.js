@@ -41,9 +41,9 @@ export async function processQueue() {
             beneficiaryAddress,
             secret
           );
-          const amount = claimReceipt.amount;
-          const amountUSD = amount / 1e7;
-          const timestamp = new Date(claimReceipt.timestamp * 1000);
+          const amountUSD = payload.amountUSD || 0;
+          const amount = Math.round(amountUSD * 1e7);
+          const timestamp = new Date();
           const txHash = claimReceipt.txHash;
 
           const claim = new Claim({
@@ -75,7 +75,7 @@ export async function processQueue() {
             nullifier,
             amountUSD,
             programId,
-            timestamp: claimReceipt.timestamp
+            timestamp: Math.floor(Date.now() / 1000)
           });
 
           item.status = 'completed';
@@ -83,7 +83,7 @@ export async function processQueue() {
           item.txHash = txHash;
 
         } else if (claimType === 'goods') {
-          // For goods, we need to update the specific inventory batch
+          const { itemId, batchNumber, quantity } = payload;
           const program = await GoodsProgram.findOne({ internalId: programInternalId });
           if (program) {
             const inventoryIndex = program.inventory.findIndex(
@@ -115,10 +115,10 @@ export async function processQueue() {
           } else {
             throw new Error('Goods program not found');
           }
+          item.status = 'completed';
+          item.processedAt = new Date();
+
         }
-        item.status = 'completed';
-        item.processedAt = new Date();
-        
       }
     } catch (error) {
       item.retryCount += 1;

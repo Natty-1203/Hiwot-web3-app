@@ -26,9 +26,7 @@ const claimSchema = new mongoose.Schema({
   location: { lat: Number, lng: Number }
 });
 
-// Ensure one cash claim per program per beneficiary (but we already have unique on nullifier+program)
-// However, with the commitment, we may need a different unique constraint. For cash claims,
-// we want to prevent duplicate claims for the same program, so we keep the existing index.
+// Unique index prevents duplicate cash claims per program
 claimSchema.index({ nullifier: 1, programInternalId: 1 }, { unique: true, partialFilterExpression: { claimType: 'cash' } });
 claimSchema.index({ unique: true });
 

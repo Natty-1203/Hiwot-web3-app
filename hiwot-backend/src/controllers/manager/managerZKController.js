@@ -8,8 +8,7 @@ export const runZKQuery = async (req, res) => {
       return errorResponse(res, 'VALIDATION_ERROR', 'type and program_id required', 400);
     }
 
-    // Simulate query execution (in reality, would call smart contract)
-    // For demo, we just return a dummy count based on type
+    // Mock ZK query result
     let resultData;
     switch (type) {
       case 'unique_beneficiaries':

@@ -1,0 +1,21 @@
+[package]
+name = "hiwot-token"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+doctest = false
+
+[dependencies]
+soroban-sdk = "=25.1.0"
+
+[dev_dependencies]
+soroban-sdk = { version = "=25.1.0", features = ["testutils"] }
+
+[profile.release]
+opt-level = "z"
+overflow-checks = true
+debug = 0
+lto = true
+panic = "abort"

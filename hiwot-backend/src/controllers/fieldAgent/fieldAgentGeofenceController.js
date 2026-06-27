@@ -29,7 +29,7 @@ export const verifyLocation = async (req, res) => {
     const allPrograms = [...cashPrograms, ...goodsPrograms];
 
     let inZone = false;
-    let distance = 0; // placeholder, we can compute min distance to nearest program edge
+    let distance = 0; // TODO: compute min distance to program edge
 
     for (const program of allPrograms) {
       const polygon = program.geofence.map(c => [c.lat, c.lng]);

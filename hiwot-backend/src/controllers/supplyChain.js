@@ -129,7 +129,7 @@ export const getShipmentById = async (req, res) => {
     // Build origin/destination objects
     const origin = {
       name: shipment.origin,
-      coordinates: null, // we could add coordinates later
+      coordinates: null, // TODO
       timestamp: shipment.createdAt?.toISOString()
     };
     const destination = {

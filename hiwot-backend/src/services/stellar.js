@@ -186,10 +186,13 @@ async function invokeContract(contractId, method, args = [], isView = false) {
 // ------------------------------
 export const stellarService = {
   // ----- Identity Contract -----
-  async registerBeneficiary(nullifier, agentWallet, metadataHash) {
+  async registerBeneficiary(nullifier, agentWallet = backendKeypair.publicKey(), metadataHash) {
     const nullifierBytes = Buffer.from(nullifier.replace('0x', ''), 'hex');
     const agentAddr = new Address(agentWallet);
-    const metadataHashBytes = Buffer.from(metadataHash.replace('0x', ''), 'hex');
+    const metadataHashHex = metadataHash
+      ? metadataHash.replace('0x', '')
+      : crypto.createHash('sha256').update(nullifier).digest('hex');
+    const metadataHashBytes = Buffer.from(metadataHashHex, 'hex');
     const result = await invokeContract(
       config.identityContractId,
       'register',
@@ -201,7 +204,7 @@ export const stellarService = {
 
   async verifyBeneficiary(nullifier) {
     const nullifierBytes = Buffer.from(nullifier.replace('0x', ''), 'hex');
-    // The contract expects (agent, nullifier) – we can pass a dummy agent address.
+    // Dummy agent address for non-agent query
     const dummyAgent = new Address(backendKeypair.publicKey());
     const result = await invokeContract(
       config.identityContractId,
@@ -422,6 +425,15 @@ export const stellarService = {
     return result;
   },
 
+  // ----- Cash Claim (wraps disbursement contract's distribute) -----
+  async claimAid(nullifier, programId, locationStr, beneficiaryAddress, secret) {
+    const [lat, lng] = locationStr.split(',').map(Number);
+    const location = { lat, lng };
+    const agentWallet = backendKeypair.publicKey();
+    const result = await this.distribute(agentWallet, programId, nullifier, location, null);
+    return { txHash: result.txHash };
+  },
+
   // ----- Token Contract (mock USDC) -----
   async mintTokens(toWallet, amountStroops) {
     const toAddr = new Address(toWallet);
@@ -476,8 +488,8 @@ export const stellarService = {
     const batchIdBytes = stringToBytesN32(batchIdString);
     const newCustodianAddr = new Address(newCustodianWallet);
     const locationScVal = [ 
-      { type: 'i128', value: Math.abs(location.lat) <= 500 ? Math.round(location.lat * 1e7) : Math.round(location.lat) }, 
-      { type: 'i128', value: Math.abs(location.lng) <= 500 ? Math.round(location.lng * 1e7) : Math.round(location.lng) } 
+      Math.round(location.lat), 
+      Math.round(location.lng) 
     ];
     const result = await invokeContract(
       config.supplyChainContractId,
@@ -492,8 +504,8 @@ export const stellarService = {
     const custodianAddr = new Address(custodianWallet);
     const batchIdBytes = stringToBytesN32(batchIdString);
     const locationScVal = [ 
-      { type: 'i128', value: Math.abs(location.lat) <= 500 ? Math.round(location.lat * 1e7) : Math.round(location.lat) }, 
-      { type: 'i128', value: Math.abs(location.lng) <= 500 ? Math.round(location.lng * 1e7) : Math.round(location.lng) } 
+      Math.round(location.lat), 
+      Math.round(location.lng) 
     ];
     const result = await invokeContract(
       config.supplyChainContractId,
@@ -510,8 +522,8 @@ export const stellarService = {
     const distributionIdBytes = stringToBytesN32(distributionIdString);
     const nullifierBytes = Buffer.from(nullifier.replace('0x', ''), 'hex');
     const locationScVal = [ 
-      { type: 'i128', value: Math.abs(location.lat) <= 500 ? Math.round(location.lat * 1e7) : Math.round(location.lat) }, 
-      { type: 'i128', value: Math.abs(location.lng) <= 500 ? Math.round(location.lng * 1e7) : Math.round(location.lng) } 
+      Math.round(location.lat), 
+      Math.round(location.lng) 
     ];
     const result = await invokeContract(
       config.supplyChainContractId,

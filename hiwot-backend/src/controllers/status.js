@@ -52,16 +52,13 @@ export const getClaimStatus = async (req, res) => {
     }
 
     // 4. If not found locally or pending, query blockchain for authoritative answer
-    // This is optional but good for consistency. If blockchain is unreachable,
-    // we can fallback to local pending record.
+    // Fallback to local record if blockchain unreachable
     let blockchainClaimed = false;
     let blockchainDetails = null;
     try {
       blockchainClaimed = await stellarService.getClaimStatus(nullifier, normalizedProgramId);
       
-      // Optionally, if blockchain says claimed but we don't have local record,
-      // we might want to fetch additional details (like amount, timestamp) from the contract
-      // using another view function. For simplicity, we'll just return claimed: true without details.
+      // Return basic confirmation if blockchain-only claim
     } catch (error) {
       console.warn('Blockchain status check failed:', error.message);
       // If blockchain fails, we rely on local data (or return false if no local)

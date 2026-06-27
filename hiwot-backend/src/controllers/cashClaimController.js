@@ -89,7 +89,8 @@ export const claimCash = async (req, res) => {
           claimType: 'cash',
           secret,
           commitment,
-          beneficiaryAddress
+          beneficiaryAddress,
+          amountUSD: program.amountPerPerson
         },
         status: 'pending'
       });
@@ -97,10 +98,10 @@ export const claimCash = async (req, res) => {
     }
 
     // Update claim record with success
-    const amountStroops = claimReceipt.amount; // amount returned by contract in stroops
-    const amountUSD = amountStroops / 1e7;
+    const amountStroops = Math.round(program.amountPerPerson * 1e7);
+    const amountUSD = program.amountPerPerson;
     claim.amount = amountStroops;
-    claim.timestamp = new Date(claimReceipt.timestamp * 1000);
+    claim.timestamp = new Date();
     claim.txHash = claimReceipt.txHash;
     claim.status = 'completed';
     claim.synced = true;
@@ -119,7 +120,7 @@ export const claimCash = async (req, res) => {
         nullifier: nullifier_hash,
         amountUSD,
         programId: program.programId,
-        timestamp: claimReceipt.timestamp
+        timestamp: Math.floor(Date.now() / 1000)
       });
     } catch (bankError) {
       console.error('Bank transfer failed:', bankError.message);
@@ -158,9 +159,7 @@ export const getCashClaimStatus = async (req, res) => {
       return res.json({ success: true, claimed: false });
     }
 
-    // Optionally verify on-chain using verify_claim if needed (but we trust local)
-    // For extra assurance, we could call contract.verifyClaim(claim.commitment)
-    // but for speed we skip.
+    // Trust local DB (on-chain verify skipped for speed)
 
     res.json({
       success: true,
